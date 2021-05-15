@@ -39,6 +39,8 @@ jobs:
   create-release:
     # needs: publish-npm
     runs-on: ubuntu-latest
+    env:
+        TEST: test
     steps:
       - name: Get the version
         id: get_version
