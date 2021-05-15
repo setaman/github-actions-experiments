@@ -14,20 +14,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        shell: bash
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
-      - name: Is pre-release
-        if: contains('${GITHUB_REF/refs\/tags\//}', 'beta') || contains('${GITHUB_REF/refs\/tags\//}', 'alpha')
-        run: echo "Creating pre-release!"
-        env:
-            IS_PRERELEASE: true
-      - run: echo ${IS_PRERELEASE}
       - run: npm ci
       - run: npm run test
       - run: npm run build
@@ -41,7 +31,6 @@ jobs:
         with:
           node-version: 14.16
           registry-url: https://registry.npmjs.org/
-     
       - run: npm ci
       - run: npm publish --access public --dry-run
         env:
@@ -51,9 +40,15 @@ jobs:
     # needs: publish-npm
     runs-on: ubuntu-latest
     steps:
-    - run: echo contains(${GITHUB_REF/refs\/tags\//}, 'alpha')
-    - uses: actions/checkout@v1
-    - uses: ncipollo/release-action@v1
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        prerelease: contains(${GITHUB_REF/refs\/tags\//}, 'alpha') || contains(${GITHUB_REF/refs\/tags\//}, 'beta')
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        shell: bash
+        env:
+          IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
+      - run: echo ${{ IS_PRERELEASE }}      
+      - uses: actions/checkout@v1
+      - uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: ${{ IS_PRERELEASE }}
