@@ -39,18 +39,16 @@ jobs:
   create-release:
     # needs: publish-npm
     runs-on: ubuntu-latest
-    env:
-        TEST: test
     steps:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
         shell: bash
+      - run: echo ${{ steps.get_versio.env.IS_PRERELEASE }}
         env:
-          TEST: test
-          IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
-      - run: echo ${{ env.IS_PRERELEASE }}     
-      - run: echo ${{ env.TEST }}
+         TEST: test
+         IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
+      - run: echo ${{ env.IS_PRERELEASE }}
       - run: echo ${{ steps.get_version.outputs.VERSION }}
       - uses: actions/checkout@v1
       - uses: ncipollo/release-action@v1
