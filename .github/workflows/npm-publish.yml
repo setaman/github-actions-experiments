@@ -3,13 +3,11 @@
 
 name: release
 
-# on:
-#  push:
-#    tags:
-#      - v*
+on:
+  push:
+    tags:
+      - v*
 
-on: push
-    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,11 +17,20 @@ jobs:
         with:
           node-version: 14.16
       - run: npm ci
-      - run: npm run test
       - run: npm run build
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.16
+      - run: npm ci
+      - run: npm run test
+
   publish-npm:
-    needs: build
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -35,18 +42,17 @@ jobs:
       - run: npm publish --access public --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-    
+
   create-release:
-    # needs: publish-npm
+    needs: publish-npm
     runs-on: ubuntu-latest
     steps:
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Get tag
+        id: get_tag
+        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
         shell: bash
       - uses: actions/checkout@v1
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha') }}
-      - run: echo ${{ env.VERSION }}
+          prerelease: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
