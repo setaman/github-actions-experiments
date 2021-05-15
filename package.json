@@ -1,12 +1,13 @@
 {
   "name": "serga-test1",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "node tests.js",
     "build": "node build.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "changelog": "auto-changelog"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,14 @@
   "bugs": {
     "url": "https://github.com/setaman/github-actions-experiments/issues"
   },
-  "homepage": "https://github.com/setaman/github-actions-experiments#readme"
+  "homepage": "https://github.com/setaman/github-actions-experiments#readme",
+  "devDependencies": {
+    "auto-changelog": "^2.2.1"
+  },
+  "auto-changelog": {
+    "unreleased": true,
+    "commitLimit": false,
+    "breakingPattern": ".!:.",
+    "package": false
+  }
 }
