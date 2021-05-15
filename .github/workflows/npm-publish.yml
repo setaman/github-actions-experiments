@@ -43,4 +43,4 @@ jobs:
     - uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        prerelease: contains(${{GITHUB_REF/refs\/tags\//}}, 'alpha') || contains(${{GITHUB_REF/refs\/tags\//}}, 'beta')
+        prerelease: contains(${GITHUB_REF/refs\/tags\//}, 'alpha') || contains(${GITHUB_REF/refs\/tags\//}, 'beta')
