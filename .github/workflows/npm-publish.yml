@@ -22,10 +22,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
-      - run: echo ${{ steps.get_version.outputs.VERSION }}
-      - run: contains(${{ steps.get_version.outputs.VERSION }}, 'beta')
-      - run: contains(${{ steps.get_version.outputs.VERSION }}, 'alpha')
-      - run: contains(${{ steps.get_version.outputs.VERSION }}, 'beta') || contains(${{ steps.get_version.outputs.VERSION }}, 'alpha')
+      - name: Is pre-release
+        if: contains('${GITHUB_REF/refs\/tags\//}', 'beta') || contains('${GITHUB_REF/refs\/tags\//}', 'alpha')
+        run: echo "Creating pre-release!"
+        env:
+            IS_PRERELEASE: true
+      - run: echo ${IS_PRERELEASE}
       - run: npm ci
       - run: npm run test
       - run: npm run build
