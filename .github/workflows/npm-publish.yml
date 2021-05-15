@@ -48,7 +48,7 @@ jobs:
         shell: bash
       - name: Is pre-release
         id: is_prerelease
-        run: echo ${{ steps.get_version.outputs.VERSION }}
+        run: echo ${{ contains(steps.get_version.outputs.VERSION, 'beta') }}
         env:
          TEST: Hello!!!!
          IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
