@@ -4,8 +4,10 @@
 name: Release package
 
 on:
-  create:
-    tags
+  push:
+    tags:
+    - '*'
+    
 jobs:
   build:
     runs-on: ubuntu-latest
