@@ -57,7 +57,7 @@ jobs:
         uses: EndBug/add-and-commit@v7
         with:
           message: 'chore: add changelog'
-          add: 'CHANGELOG.MD'
+          add: 'CHANGELOG.md'
 
   create-release:
     needs: [publish-npm, add-changelog]
