@@ -43,8 +43,24 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
+  add-changelog:
+    needs: [ build, test ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.16
+      - run: npm ci
+      - run: npm run changelog
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          message: 'chore: add changelog'
+          add: 'CHANGELOG.MD'
+
   create-release:
-    needs: publish-npm
+    needs: [publish-npm, add-changelog]
     runs-on: ubuntu-latest
     steps:
       - name: Get tag
