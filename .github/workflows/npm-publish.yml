@@ -16,8 +16,8 @@ jobs:
         with:
           node-version: 14.16
       - run: npm ci
-      - run: npm test
-      - run: npm build
+      - run: npm run test
+      - run: npm run build
 
   publish-npm:
     needs: build
@@ -29,7 +29,7 @@ jobs:
           node-version: 14.16
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm publish
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
 
@@ -46,6 +46,6 @@ jobs:
           node-version: 14.16
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
-      - run: npm publish
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
