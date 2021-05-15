@@ -39,8 +39,6 @@ jobs:
   create-release:
     # needs: publish-npm
     runs-on: ubuntu-latest
-    env:
-     GLOB: ${{ contains('kek', 'e') }}
     steps:
       - name: Get the version
         id: get_version
@@ -48,15 +46,9 @@ jobs:
         shell: bash
       - name: Is pre-release
         id: is_prerelease
-        run: echo ${{ contains(steps.get_version.outputs.VERSION, 'beta') }}
-        env:
-         TEST: Hello!!!!
-         IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
-      - run: echo ${{ steps.is_prerelease }}
-      - run: echo ${{ env.GLOB }}
-      - run: echo ${{ steps.is_prerelease.env.TEST }}
+        run: echo ${{ contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha') }}
       - uses: actions/checkout@v1
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ steps.is_prerelease.env.IS_PRERELEASE }}
+          prerelease: ${{ contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha') }}
