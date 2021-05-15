@@ -24,6 +24,7 @@ jobs:
           node-version: 14.16
       - name: Is pre-release
         if: contains('${{ GITHUB_REF/refs\/tags\// }}', 'beta') || contains('${{ GITHUB_REF/refs\/tags\// }}', 'alpha')
+        run: echo "Creating pre-release!"
         env:
             IS_PRERELEASE: true
       - run: echo ${IS_PRERELEASE}
