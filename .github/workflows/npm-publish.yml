@@ -48,9 +48,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
     
   create-release:
-    needs: publish-npm
+    # needs: publish-npm
     runs-on: ubuntu-latest
     steps:
+    - run: echo contains(${GITHUB_REF/refs\/tags\//}, 'alpha')
     - uses: actions/checkout@v1
     - uses: ncipollo/release-action@v1
       with:
