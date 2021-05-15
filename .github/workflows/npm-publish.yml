@@ -27,9 +27,9 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
+      - run: echo ${{secrets.NPM_AUTOMATION_TOKEN}}
       - run: npm ci
       - run: npm publish --access public
-      - run: echo ${{secrets.NPM_AUTOMATION_TOKEN}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTOMATION_TOKEN}}
 
