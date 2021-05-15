@@ -23,10 +23,10 @@ jobs:
         with:
           node-version: 14.16
       - run: | 
-            if [[ "${GITHUB_REF/refs\/tags\//}" == *"beta"* ]]; then
+            if [[ ${GITHUB_REF/refs\/tags\//} == *"beta"* ]]; then
                 echo "is beta!"
             fi
-            if [[ "${GITHUB_REF/refs\/tags\//}" == *"alpha"* ]]; then
+            if [[ ${GITHUB_REF/refs\/tags\//} == *"alpha"* ]]; then
                 echo "is alpha!"
             fi  
       - run: echo ${{ steps.get_version.outputs.VERSION }}
