@@ -22,20 +22,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
-      - run: | 
-            if [[ ${GITHUB_REF/refs\/tags\//} == *"beta"* ]]; then
-                echo "is beta!"
-                echo ::set-output name=PRERELEASE::true
-            fi
-            if [[ ${GITHUB_REF/refs\/tags\//} == *"alpha"* ]]; then
-                echo "is alpha!"
-                echo ::set-output name=PRERELEASE::true
-            fi  
-            if [[ ${GITHUB_REF/refs\/tags\//} == *"main"* ]]; then
-                echo "is main!"
-                echo ::set-output name=PRERELEASE::false
-            fi 
-      - run: echo ${{ steps.get_version.outputs.PRERELEASE }}
+      - name: Is pre-release
+        if: contains('${{ GITHUB_REF/refs\/tags\// }}', 'beta') || contains('${{ GITHUB_REF/refs\/tags\// }}', 'alpha')
+        env:
+            IS_PRERELEASE: true
+      - run: echo ${IS_PRERELEASE}
       - run: npm ci
       - run: npm run test
       - run: npm run build
