@@ -6,7 +6,7 @@ name: Release package
 on:
   push:
     tags:
-      - '*'
+      - v*
     
 jobs:
   build:
