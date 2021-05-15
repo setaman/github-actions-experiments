@@ -46,9 +46,9 @@ jobs:
         shell: bash
         env:
           IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
-      - run: echo ${{ IS_PRERELEASE }}      
+      - run: echo ${{ env.IS_PRERELEASE }}      
       - uses: actions/checkout@v1
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ IS_PRERELEASE }}
+          prerelease: ${{ env.IS_PRERELEASE }}
