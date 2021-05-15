@@ -44,12 +44,11 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
         shell: bash
-        env:
-          IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
-      - run: echo ${{ env.IS_PRERELEASE }}      
-      - run: echo ${{ steps.get_version.outputs.VERSION }}
+      - name: Is pre-release
+        id: is_prerelease
+        run: echo ${{ contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha') }}
       - uses: actions/checkout@v1
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ env.IS_PRERELEASE }}
+          prerelease: ${{ contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha') }}
