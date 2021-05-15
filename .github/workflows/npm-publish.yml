@@ -29,6 +29,9 @@ jobs:
             if [[ ${GITHUB_REF/refs\/tags\//} == *"alpha"* ]]; then
                 echo "is alpha!"
             fi  
+            if [[ ${GITHUB_REF/refs\/tags\//} == *"main"* ]]; then
+                echo "is main!"
+            fi 
       - run: echo ${{ steps.get_version.outputs.VERSION }}
       - run: contains('Hello world', 'llo')
       - run: contains(steps.get_version.outputs.VERSION , 'alpha')
