@@ -47,6 +47,7 @@ jobs:
         env:
           IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
       - run: echo ${{ env.IS_PRERELEASE }}      
+      - run: echo ${{ steps.get_version.outputs.VERSION }}
       - uses: actions/checkout@v1
       - uses: ncipollo/release-action@v1
         with:
