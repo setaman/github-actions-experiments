@@ -47,6 +47,7 @@ jobs:
       - run: echo ${{ steps.get_versio.env.IS_PRERELEASE }}
       - name: Is pre-release
         id: is_prerelease
+        run: echo ""
         env:
          TEST: Hello!!!!
          IS_PRERELEASE: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
