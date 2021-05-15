@@ -3,10 +3,12 @@
 
 name: release
 
-on:
-  push:
-    tags:
-      - v*
+# on:
+#  push:
+#    tags:
+#      - v*
+
+on: push
     
 jobs:
   build:
@@ -16,6 +18,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
+      - run: echo ${GITHUB_REF/refs\/tags\//}
+      - run: contains(${GITHUB_REF/refs\/tags\//}, 'alpha')
+      - run: contains(${GITHUB_REF/refs\/tags\//}, 'alpha')
+      - run: contains(${GITHUB_REF/refs\/tags\//}, 'beta') || contains(${GITHUB_REF/refs\/tags\//}, 'alpha')
       - run: npm ci
       - run: npm run test
       - run: npm run build
