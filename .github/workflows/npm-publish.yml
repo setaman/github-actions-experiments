@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: 14.16
       - run: echo ${{ steps.get_version.outputs.VERSION }}
-      - run: contains('${{ steps.get_version.outputs.VERSION }}' , 'beta')
+      - run: contains('hui' , 'beta')
       - run: contains(steps.get_version.outputs.VERSION , 'alpha')
       - run: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
       - run: npm ci
