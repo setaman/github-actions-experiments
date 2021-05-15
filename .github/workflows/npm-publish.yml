@@ -25,17 +25,17 @@ jobs:
       - run: | 
             if [[ ${GITHUB_REF/refs\/tags\//} == *"beta"* ]]; then
                 echo "is beta!"
+                echo ::set-output name=PRERELEASE::true
             fi
             if [[ ${GITHUB_REF/refs\/tags\//} == *"alpha"* ]]; then
                 echo "is alpha!"
+                echo ::set-output name=PRERELEASE::true
             fi  
             if [[ ${GITHUB_REF/refs\/tags\//} == *"main"* ]]; then
                 echo "is main!"
+                echo ::set-output name=PRERELEASE::false
             fi 
-      - run: echo ${{ steps.get_version.outputs.VERSION }}
-      - run: contains('Hello world', 'llo')
-      - run: contains(steps.get_version.outputs.VERSION , 'alpha')
-      - run: contains(steps.get_version.outputs.VERSION, 'beta') || contains(steps.get_version.outputs.VERSION, 'alpha')
+      - run: echo ${{ steps.get_version.outputs.PRERELEASE }}
       - run: npm ci
       - run: npm run test
       - run: npm run build
