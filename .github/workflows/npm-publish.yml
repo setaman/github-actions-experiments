@@ -58,11 +58,8 @@ jobs:
       - run: npm run changelog
       - run: |
           git branch
-          date > generated.txt
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "generated"
+          git add CHANGELOG.md
+          git commit -m "chore: add changelog"
           git push
 #      - name: Commit changes
 #        uses: EndBug/add-and-commit@v7
