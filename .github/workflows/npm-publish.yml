@@ -16,6 +16,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
+      - run: echo ${GITHUB_REF}
       - run: npm ci
       - run: npm run build
 
@@ -26,7 +27,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
-      - run: echo ${{ GITHUB_REF }}
       - run: npm ci
       - run: npm run test
 
