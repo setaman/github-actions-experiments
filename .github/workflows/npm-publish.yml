@@ -12,73 +12,70 @@ jobs:
     steps:
       - run: echo "Releasing...."
 
-  build:
-    needs: [check]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.16
-      - run: git branch
-      - run: npm ci
-      - run: npm run build
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.16
-      - run: npm ci
-      - run: npm run test
-
-  publish-npm:
-    needs: [build, test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.16
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - run: npm publish --access public --dry-run
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-  add-changelog:
-    # needs: [ build, test ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.16
-      - run: npm ci
-      - run: npm run changelog
-      - uses: nelonoel/branch-name@v1.0.1
-      # Use branch name for whatever purpose
-      - run: echo ${BRANCH_NAME}
-      - run: |
-          git branch
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add CHANGELOG.md
-          git commit -m "chore: add changelog"
-          git push
-
-  create-release:
-    needs: [publish-npm, add-changelog]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get tag
-        id: get_tag
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
-        shell: bash
-      - uses: actions/checkout@v1
-      - uses: ncipollo/release-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
+#  build:
+#    needs: [check]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: 14.16
+#      - run: git branch
+#      - run: npm ci
+#      - run: npm run build
+#
+#  test:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: 14.16
+#      - run: npm ci
+#      - run: npm run test
+#
+#  publish-npm:
+#    needs: [build, test]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: 14.16
+#          registry-url: https://registry.npmjs.org/
+#      - run: npm ci
+#      - run: npm publish --access public --dry-run
+#        env:
+#          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+#
+#  add-changelog:
+#    # needs: [ build, test ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v2
+#        with:
+#          node-version: 14.16
+#      - run: npm ci
+#      - run: npm run changelog
+#      - run: |
+#          git branch
+#          git config user.name github-actions
+#          git config user.email github-actions@github.com
+#          git add CHANGELOG.md
+#          git commit -m "chore: add changelog"
+#          git push
+#
+#  create-release:
+#    needs: [publish-npm, add-changelog]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Get tag
+#        id: get_tag
+#        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+#        shell: bash
+#      - uses: actions/checkout@v1
+#      - uses: ncipollo/release-action@v1
+#        with:
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#          prerelease: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
