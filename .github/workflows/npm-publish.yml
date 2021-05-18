@@ -54,6 +54,9 @@ jobs:
           node-version: 14.16
       - run: npm ci
       - run: npm run changelog
+      - uses: nelonoel/branch-name@v1.0.1
+      # Use branch name for whatever purpose
+      - run: echo ${BRANCH_NAME}
       - run: |
           git branch
           git config user.name github-actions
