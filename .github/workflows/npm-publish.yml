@@ -3,17 +3,14 @@
 
 name: release
 
-on:
-  push:
-    tags:
-      - v*
+on: push
 
 jobs:
   check:
     runs-on: ubuntu-latest
     if: "contains(github.event.head_commit.message, 'release')"
     steps:
-      - run: echo ""
+      - run: echo "Releasing..."
 
   build:
     needs: [check]
