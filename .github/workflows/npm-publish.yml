@@ -70,7 +70,7 @@ jobs:
 #          node-version: 14.16
 #      - run: npm ci
 #      - run: npm run test
-#
+
   publish-npm:
     needs: [get-tag-info]
     runs-on: ubuntu-latest
