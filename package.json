@@ -1,13 +1,12 @@
 {
   "name": "serga-test1",
-  "version": "0.0.15-alpha.37",
+  "version": "0.0.15-alpha.38",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "node tests.js",
     "build": "node build.js",
     "start": "node index.js",
-    "publish": "npm run build && npm publish",
     "publishBeta": "npm run build && npm publish --tag beta",
     "publishAlpha": "npm run build && npm publish --tag alpha",
     "publishNext": "npm run build && npm publish --tag next",

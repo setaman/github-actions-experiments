@@ -79,17 +79,30 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
-      - name: Publisch stable
-        if: ${{!needs.get-tag-info.outputs.prerelease}}
-        run: npm publish
-      - name: Publisch alpha
-        if: ${{needs.get-tag-info.outputs.alpha}}
-        run: npm run publish-alpha
-      - name: Publisch beta
-        if: ${{!needs.get-tag-info.outputs.beta}}
-        run: npm run publishBeta
+      - run: npm ci && npm run build
+      - run: |
+          tag=latest
+          if [ $pre = true ]; then
+              echo "Releasing prerelease!"
+              if [ $beta = true ]; then
+                echo "Releasing beta..."
+                tag=beta
+              elif [ $alpha = true ]; then
+                echo "Releasing alpha..."
+                tag=alpha
+              elif [ $next = true ]; then
+                echo "Releasing next..."
+                tag=next
+              fi
+          fi
+
+          npm publish --tag "$tag"
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+        pre: ${{needs.get-tag-info.outputs.prerelease}}
+        beta: ${{needs.get-tag-info.outputs.beta}}
+        alpha: ${{needs.get-tag-info.outputs.alpha}}
+        next: ${{needs.get-tag-info.outputs.next}}
 #
 #  create-release:
 #    needs: [publish-npm, add-changelog]
