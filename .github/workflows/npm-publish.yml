@@ -34,8 +34,8 @@ jobs:
       - run: echo "Tag:" ${{steps.get_tag.outputs.TAG}}
       - run: echo "Prerelease:" ${{steps.is_prerelease.outputs.PRERELEASE}}
     outputs:
-      alpha:  ${{ steps.is_prerelease.outputs.ALPHA }}
-      beta:  ${{ steps.is_prerelease.outputs.BETA }}
+      alpha:  ${{ steps.is_alpha.outputs.ALPHA }}
+      beta:  ${{ steps.is_beta.outputs.BETA }}
       prerelease:  ${{ steps.is_prerelease.outputs.PRERELEASE }}
       current_tag:  ${{ steps.get_tag.outputs.TAG }}
 
