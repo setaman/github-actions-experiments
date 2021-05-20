@@ -74,12 +74,6 @@ jobs:
   publish-npm:
     needs: [get-tag-info]
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      pre: ${{needs.get-tag-info.outputs.prerelease}}
-      beta: ${{needs.get-tag-info.outputs.beta}}
-      alpha: ${{needs.get-tag-info.outputs.alpha}}
-      next: ${{needs.get-tag-info.outputs.next}}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
