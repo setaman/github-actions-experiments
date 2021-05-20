@@ -105,6 +105,7 @@ jobs:
           fi
 
           npm publish --tag "$tag"
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
           pre: ${{needs.get-tag-info.outputs.prerelease}}
