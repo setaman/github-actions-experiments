@@ -19,7 +19,7 @@ jobs:
         env:
           PRERELEASE: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
           CURRENT_TAG: ${{ steps.get_tag.outputs.TAG }}
-      - run: echo ${{needs.get_tag.env.PRERELEASE}}
+      - run: echo ${{steps.get_tag.env.PRERELEASE}}
     outputs:
       prerelease:  ${{ steps.get_tag.env.PRERELEASE }}
       current_tag:  ${{ steps.get_tag.env.CURRENT_TAG }}
