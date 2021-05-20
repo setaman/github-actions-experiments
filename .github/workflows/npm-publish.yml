@@ -16,12 +16,15 @@ jobs:
         id: get_tag
         run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
         shell: bash
-      - uses: actions/checkout@v1
-      - uses: ncipollo/release-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
-      - run: echo ${INPUT_PRERELEASE}
+        env:
+          PRERELEASE: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
+          CURRENT_TAG: ${{ steps.get_tag.outputs.TAG }}
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Hello
+      - run: echo ${jobs.get-tag-info.steps.get_tag.env.CURRENT_TAG}
+      - run: echo ${jobs.get-tag-info.steps.get_tag.env.PRERELEASE}
 
 #  build:
 #    needs: [check]
