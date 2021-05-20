@@ -102,7 +102,7 @@ jobs:
               fi
           fi
 
-          npm publish --tag "$tag"#
+          npm publish --tag "$tag"
 #  create-release:
 #    needs: [publish-npm, add-changelog]
 #    runs-on: ubuntu-latest
