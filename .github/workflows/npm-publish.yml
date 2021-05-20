@@ -21,8 +21,6 @@ jobs:
           CURRENT_TAG: ${{ steps.get_tag.outputs.TAG }}
   check:
     needs: [get-tag-info]
-    env:
-      t: ${{ needs }}
     runs-on: ubuntu-latest
     steps:
       - run: echo ${{needs}}
