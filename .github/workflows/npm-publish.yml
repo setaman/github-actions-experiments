@@ -16,17 +16,17 @@ jobs:
         id: get_tag
         run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
         shell: bash
-      - name: Set tag info
-        id: set_tag
+      - name: Is prerelease
+        id: is_prerelease
         env:
           PRERELEASE: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
-          CURRENT_TAG: ${{ steps.get_tag.outputs.TAG }}
         run: echo ::set-output name=PRERELEASE::$PRERELEASE
-      - run: echo ${{steps.get_tag.outputs.TAG}}
-      - run: echo ${{steps.set_tag.outputs.PRERELEASE}}
+      - run: echo "Tag:" ${{steps.get_tag.outputs.TAG}}
+      - run: echo "Prerelease:" ${{steps.is_prerelease.outputs.PRERELEASE}}
     outputs:
-      prerelease:  ${{ steps.get_tag.outputs.PRERELEASE }}
+      prerelease:  ${{ steps.is_prerelease.outputs.PRERELEASE }}
       current_tag:  ${{ steps.get_tag.outputs.TAG }}
+
   check:
     needs: [get-tag-info]
     runs-on: ubuntu-latest
