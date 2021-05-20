@@ -79,10 +79,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
-          registry-url: https://registry.npmjs.org/
-      - run: echo wtf
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
       - name: Publisch stable
         if: ${{!needs.get-tag-info.outputs.prerelease}}
         run: npm publish --access public --dry-run
@@ -92,6 +88,8 @@ jobs:
       - name: Publisch beta
         if: ${{!needs.get-tag-info.outputs.beta}}
         run: npm run publish:beta
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 #
 #  create-release:
 #    needs: [publish-npm, add-changelog]
