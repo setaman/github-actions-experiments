@@ -87,7 +87,7 @@ jobs:
         run: npm run publish-alpha
       - name: Publisch beta
         if: ${{!needs.get-tag-info.outputs.beta}}
-        run: npm run publish-beta
+        run: npm run publishBeta
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 #
