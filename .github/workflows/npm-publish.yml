@@ -79,23 +79,6 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 14.16
-      - run: npm ci && npm run build
-      - run: |
-          tag=latest
-          if [ $pre = true ]; then
-              echo "Releasing prerelease!"
-              if [ $beta = true ]; then
-                echo "Releasing beta..."
-                tag=beta
-              elif [ $alpha = true ]; then
-                echo "Releasing alpha..."
-                tag=alpha
-              elif [ $next = true ]; then
-                echo "Releasing next..."
-                tag=next
-              fi
-          fi
-
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
         pre: ${{needs.get-tag-info.outputs.prerelease}}
