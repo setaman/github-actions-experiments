@@ -80,7 +80,6 @@ jobs:
         with:
           node-version: 14.16
           registry-url: https://registry.npmjs.org/
-      - run: npm ci && npm build
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
       - name: Publisch stable
