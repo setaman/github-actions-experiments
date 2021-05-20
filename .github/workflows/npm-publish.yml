@@ -93,7 +93,7 @@ jobs:
           node-version: 14.16
       - run: npm ci && npm run build
       - run: ls
-      - run: cat .npmrc
+      - run: echo $NODE_AUTH_TOKEN
       - run: |
           tag=latest
           if [ $pre = true ]; then
