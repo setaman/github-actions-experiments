@@ -18,15 +18,15 @@ jobs:
         shell: bash
       - name: Set tag info
         id: set_tag
-        # run: echo ${{steps.get_tag.outputs.TAG}}
         env:
           PRERELEASE: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
           CURRENT_TAG: ${{ steps.get_tag.outputs.TAG }}
-        run: echo $PRERELEASE
-      - run: echo ${{steps.set_tag.env.PRERELEASE}}
+        run: echo ::set-output name=PRERELEASE::$PRERELEASE
+      - run: echo ${{steps.get_tag.outputs.TAG}}
+      - run: echo ${{steps.set_tag.outputs.PRERELEASE}}
     outputs:
-      prerelease:  ${{ steps.get_tag.env.PRERELEASE }}
-      current_tag:  ${{ steps.get_tag.env.CURRENT_TAG }}
+      prerelease:  ${{ steps.get_tag.outputs.PRERELEASE }}
+      current_tag:  ${{ steps.get_tag.outputs.TAG }}
   check:
     needs: [get-tag-info]
     runs-on: ubuntu-latest
