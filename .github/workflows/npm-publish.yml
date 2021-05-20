@@ -101,4 +101,4 @@ jobs:
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ pre }}
+          prerelease: ${{ env.pre }}
