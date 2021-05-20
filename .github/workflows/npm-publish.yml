@@ -3,18 +3,25 @@
 
 name: release
 
-on: push
+on:
+  push:
+    tags:
+      - v*
 
 jobs:
-  check:
+  get-tag-info:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Get tag
+        id: get_tag
+        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
+        shell: bash
+      - uses: actions/checkout@v1
+      - uses: ncipollo/release-action@v1
         with:
-          fetch-depth: 0
-          ref: main
-      - run: |
-          git branch --sort=-committerdate
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
+      - run: echo ${INPUT_PRERELEASE}
 
 #  build:
 #    needs: [check]
@@ -51,24 +58,6 @@ jobs:
 #      - run: npm publish --access public --dry-run
 #        env:
 #          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-#
-#  add-changelog:
-#    # needs: [ build, test ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#        with:
-#          node-version: 14.16
-#      - run: npm ci
-#      - run: npm run changelog
-#      - run: |
-#          git branch
-#          git config user.name github-actions
-#          git config user.email github-actions@github.com
-#          git add CHANGELOG.md
-#          git commit -m "chore: add changelog"
-#          git push
 #
 #  create-release:
 #    needs: [publish-npm, add-changelog]
