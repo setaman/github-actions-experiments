@@ -1,112 +1,15 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
+name: Hello World
 
-name: release
+#on:
+#  schedule:
+#    #- cron:  '0 */12 * * *'
+#    - cron:  '* * * * *'
 
-on:
-  push:
-    tags:
-      - v*
+on: [push]
 
 jobs:
-  get-tag-info:
+  one:
+    name: Hello
     runs-on: ubuntu-latest
     steps:
-      - name: Get tag
-        id: get_tag
-        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
-        shell: bash
-      - name: Is prerelease
-        id: is_prerelease
-        env:
-          PRERELEASE: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
-        run: echo ::set-output name=PRERELEASE::$PRERELEASE
-      - name: Is beta
-        id: is_beta
-        env:
-          BETA: ${{ contains(steps.get_tag.outputs.TAG, 'beta') }}
-        run: echo ::set-output name=BETA::$BETA
-      - name: Is alpha
-        id: is_alpha
-        env:
-          ALPHA: ${{ contains(steps.get_tag.outputs.TAG, 'alpha') }}
-        run: echo ::set-output name=ALPHA::$ALPHA
-      - run: echo "Tag:" ${{steps.get_tag.outputs.TAG}}
-      - run: echo "Prerelease:" ${{steps.is_prerelease.outputs.PRERELEASE}}
-    outputs:
-      alpha:  ${{ steps.is_prerelease.outputs.ALPHA }}
-      beta:  ${{ steps.is_prerelease.outputs.BETA }}
-      prerelease:  ${{ steps.is_prerelease.outputs.PRERELEASE }}
-      current_tag:  ${{ steps.get_tag.outputs.TAG }}
-
-  check:
-    needs: [get-tag-info]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: hmarr/debug-action@v2
-      - run: echo ${{needs.get-tag-info.outputs.alpha}}
-      - run: echo ${{needs.get-tag-info.outputs.beta}}
-      - run: echo ${{needs.get-tag-info.outputs.prerelease}}
-      - run: echo ${{needs.get-tag-info.outputs.current_tag}}
-
-#  build:
-#    needs: [check]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#        with:
-#          node-version: 14.16
-#      - run: git branch
-#      - run: npm ci
-#      - run: npm run build
-#
-#  test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#        with:
-#          node-version: 14.16
-#      - run: npm ci
-#      - run: npm run test
-
-  publish-npm:
-    needs: [get-tag-info]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14.16
-      - run: npm ci && npm run build
-      - run: |
-          tag=latest
-          if [ $pre = true ]; then
-              echo "Releasing prerelease!"
-              if [ $beta = true ]; then
-                echo "Releasing beta..."
-                tag=beta
-              elif [ $alpha = true ]; then
-                echo "Releasing alpha..."
-                tag=alpha
-              elif [ $next = true ]; then
-                echo "Releasing next..."
-                tag=next
-              fi
-          fi
-
-          npm publish --tag "$tag"
-#  create-release:
-#    needs: [publish-npm, add-changelog]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Get tag
-#        id: get_tag
-#        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
-#        shell: bash
-#      - uses: actions/checkout@v1
-#      - uses: ncipollo/release-action@v1
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          prerelease: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
+      - run: echo "hello world"
