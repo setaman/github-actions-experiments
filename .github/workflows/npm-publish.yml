@@ -81,13 +81,13 @@ jobs:
           node-version: 14.16
       - name: Publisch stable
         if: ${{!needs.get-tag-info.outputs.prerelease}}
-        run: npm publish --access public --dry-run
+        run: npm publish
       - name: Publisch alpha
         if: ${{needs.get-tag-info.outputs.alpha}}
-        run: npm run publish:alpha
+        run: npm run publish-alpha
       - name: Publisch beta
         if: ${{!needs.get-tag-info.outputs.beta}}
-        run: npm run publish:beta
+        run: npm run publish-beta
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 #

@@ -8,9 +8,9 @@
     "build": "node build.js",
     "start": "node index.js",
     "publish": "npm run build && npm publish",
-    "publish:beta": "npm run build && npm publish --tag beta",
-    "publish:alpha": "npm run build && npm publish --tag alpha",
-    "publish:next": "npm run build && npm publish --tag next",
+    "publish-beta": "npm run build && npm publish --tag beta",
+    "publish-alpha": "npm run build && npm publish --tag alpha",
+    "publish-next": "npm run build && npm publish --tag next",
     "changelog": "auto-changelog"
   },
   "repository": {
