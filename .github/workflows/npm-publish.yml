@@ -31,11 +31,17 @@ jobs:
         env:
           ALPHA: ${{ contains(steps.get_tag.outputs.TAG, 'alpha') }}
         run: echo ::set-output name=ALPHA::$ALPHA
+      - name: Is next
+        id: is_next
+        env:
+          NEXT: ${{ contains(steps.get_tag.outputs.TAG, 'next') }}
+        run: echo ::set-output name=NEXT::$NEXT
       - run: echo "Tag:" ${{steps.get_tag.outputs.TAG}}
       - run: echo "Prerelease:" ${{steps.is_prerelease.outputs.PRERELEASE}}
     outputs:
       alpha:  ${{ steps.is_alpha.outputs.ALPHA }}
       beta:  ${{ steps.is_beta.outputs.BETA }}
+      next:  ${{ steps.is_nexz.outputs.NEXT }}
       prerelease:  ${{ steps.is_prerelease.outputs.PRERELEASE }}
       current_tag:  ${{ steps.get_tag.outputs.TAG }}
 
@@ -74,12 +80,6 @@ jobs:
   publish-npm:
     needs: [get-tag-info]
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      pre: ${{needs.get-tag-info.outputs.prerelease}}
-      beta: ${{needs.get-tag-info.outputs.beta}}
-      alpha: ${{needs.get-tag-info.outputs.alpha}}
-      next: ${{needs.get-tag-info.outputs.next}}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -89,20 +89,30 @@ jobs:
       - run: |
           tag=latest
           if [ $pre = true ]; then
-              echo "Releasing prerelease!"
-              if [ $beta = true ]; then
-                echo "Releasing beta..."
-                tag=beta
-              elif [ $alpha = true ]; then
-                echo "Releasing alpha..."
-                tag=alpha
-              elif [ $next = true ]; then
-                echo "Releasing next..."
-                tag=next
-              fi
+            echo "Releasing prerelease!"
+            if [ $beta = true ]; then
+              echo "Releasing beta..."
+              tag=beta
+            elif [ $alpha = true ]; then
+              echo "Releasing alpha..."
+              tag=alpha
+            fi
+          fi
+
+          if [ $next = true ]; then
+            echo "Releasing next..."
+            tag=next
           fi
 
           npm publish --tag "$tag"
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          pre: ${{needs.get-tag-info.outputs.prerelease}}
+          beta: ${{needs.get-tag-info.outputs.beta}}
+          alpha: ${{needs.get-tag-info.outputs.alpha}}
+          next: ${{needs.get-tag-info.outputs.next}}
+
+
 #  create-release:
 #    needs: [publish-npm, add-changelog]
 #    runs-on: ubuntu-latest
