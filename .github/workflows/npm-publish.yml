@@ -93,11 +93,8 @@ jobs:
   create-release:
     needs: [publish-npm]
     runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      pre: ${{needs.get-tag-info.outputs.prerelease}}
     steps:
       - uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: ${{ env.pre }}
+          prerelease: ${{needs.get-tag-info.outputs.prerelease}}
