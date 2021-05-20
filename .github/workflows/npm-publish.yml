@@ -20,10 +20,11 @@ jobs:
           PRERELEASE: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
           CURRENT_TAG: ${{ steps.get_tag.outputs.TAG }}
   check:
+    needs: [get-tag-info]
     runs-on: ubuntu-latest
     steps:
-      - run: echo Hello
-      - run: echo ${jobs.get-tag-info.steps.get_tag.env.CURRENT_TAG}
+      - run: echo ${jobs}
+      - run: echo ${{jobs.get-tag-info.steps.get_tag.env.CURRENT_TAG}}
       - run: echo ${jobs.get-tag-info.steps.get_tag.env.PRERELEASE}
 
 #  build:
