@@ -111,8 +111,7 @@ jobs:
             tag=next
           fi
 
-          # npm publish --tag "$tag"
-      - run: npm publish
+          npm publish --tag "$tag"
 
 
 #  create-release:
