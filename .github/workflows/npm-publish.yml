@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: hmarr/debug-action@v2
-      - run: echo "${{needs}}" | python -m json.tool
+      - run: echo ${needs} | python -m json.tool
       - run: echo ${{needs.get-tag-info.steps.get_tag.env.CURRENT_TAG}}
       - run: echo ${{needs.get-tag-info.steps.get_tag.env.PRERELEASE}}
 
