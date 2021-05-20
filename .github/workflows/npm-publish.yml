@@ -26,8 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ${t}
-      - run: echo ${{jobs.get-tag-info.steps.get_tag.env.CURRENT_TAG}}
-      - run: echo ${jobs.get-tag-info.steps.get_tag.env.PRERELEASE}
+#      - run: echo ${{jobs.get-tag-info.steps.get_tag.env.CURRENT_TAG}}
+#      - run: echo ${jobs.get-tag-info.steps.get_tag.env.PRERELEASE}
 
 #  build:
 #    needs: [check]
