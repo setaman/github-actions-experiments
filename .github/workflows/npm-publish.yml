@@ -91,7 +91,7 @@ jobs:
           npm publish --tag "$tag"
 
   create-release:
-    needs: [publish-npm]
+    needs: [publish-npm, get-tag-info]
     runs-on: ubuntu-latest
     steps:
       - uses: ncipollo/release-action@v1
