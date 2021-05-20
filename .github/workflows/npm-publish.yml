@@ -21,9 +21,21 @@ jobs:
         env:
           PRERELEASE: ${{ contains(steps.get_tag.outputs.TAG, 'beta') || contains(steps.get_tag.outputs.TAG, 'alpha') }}
         run: echo ::set-output name=PRERELEASE::$PRERELEASE
+      - name: Is beta
+        id: is_beta
+        env:
+          BETA: ${{ contains(steps.get_tag.outputs.TAG, 'beta') }}
+        run: echo ::set-output name=BETA::$BETA
+      - name: Is alpha
+        id: is_alpha
+        env:
+          ALPHA: ${{ contains(steps.get_tag.outputs.TAG, 'alpha') }}
+        run: echo ::set-output name=ALPHA::$ALPHA
       - run: echo "Tag:" ${{steps.get_tag.outputs.TAG}}
       - run: echo "Prerelease:" ${{steps.is_prerelease.outputs.PRERELEASE}}
     outputs:
+      alpha:  ${{ steps.is_prerelease.outputs.ALPHA }}
+      beta:  ${{ steps.is_prerelease.outputs.BETA }}
       prerelease:  ${{ steps.is_prerelease.outputs.PRERELEASE }}
       current_tag:  ${{ steps.get_tag.outputs.TAG }}
 
@@ -32,6 +44,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: hmarr/debug-action@v2
+      - run: echo ${{needs.get-tag-info.outputs.alpha}}
+      - run: echo ${{needs.get-tag-info.outputs.beta}}
       - run: echo ${{needs.get-tag-info.outputs.prerelease}}
       - run: echo ${{needs.get-tag-info.outputs.current_tag}}
 
@@ -57,19 +71,27 @@ jobs:
 #      - run: npm ci
 #      - run: npm run test
 #
-#  publish-npm:
-#    needs: [build, test]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@v2
-#        with:
-#          node-version: 14.16
-#          registry-url: https://registry.npmjs.org/
-#      - run: npm ci
-#      - run: npm publish --access public --dry-run
-#        env:
-#          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+  publish-npm:
+    needs: [get-tag-info]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.16
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci && npm build
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - name: Publisch stable
+        if: ${{!needs.get-tag-info.outputs.prerelease}}
+        run: npm publish --access public --dry-run
+      - name: Publisch alpha
+        if: ${{needs.get-tag-info.outputs.alpha}}
+        run: npm run publish:alpha
+      - name: Publisch beta
+        if: ${{!needs.get-tag-info.outputs.beta}}
+        run: npm run publish:beta
 #
 #  create-release:
 #    needs: [publish-npm, add-changelog]
