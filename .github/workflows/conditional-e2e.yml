@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run build
+        run: echo "Building the project..."
+
+  e2e_tests:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'run e2e')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run E2E tests
+        run: echo "Running end-to-end tests..."
