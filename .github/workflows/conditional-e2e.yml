@@ -1,0 +1,39 @@
+name: CI
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      build_output: ${{ steps.build_step.outputs.build_output }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "Building the project..."
+      - id: build_step
+        run: echo "build_output=Build completed" >> $GITHUB_OUTPUT
+  
+  check_skip:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - id: check
+        run: |
+          msg=$(git log -1 --no-merges ${{ github.event.pull_request.head.sha }} --pretty=format:"%s")
+          if [[ "$msg" =~ .*\[skip[[:space:]]+e2e\].* ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
+  e2e_tests:
+    needs: [build, check_skip]
+    runs-on: ubuntu-latest
+    if: needs.check_skip.outputs.should_skip != 'true'
+    steps:
+      - name: Run tests
+        run: echo "Run e2e..."
