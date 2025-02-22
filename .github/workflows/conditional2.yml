@@ -9,6 +9,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures all PR-related commits are fetched
+          ref: ${{ github.event.pull_request.head.sha }}  # Checkout only the PR head commit
       - name: Get last commit message
         id: get_commit_message
         shell: bash
