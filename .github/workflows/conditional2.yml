@@ -9,12 +9,15 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (PR)
         if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Ensures all PR-related commits are fetched
           ref: ${{ github.event.pull_request.head.sha }}  # Checkout only the PR head commit
+      - name: Checkout Repository (Push)
+        if: github.event_name == 'push'
+        uses: actions/checkout@v4
       - name: Get last commit message
         id: get_commit_message
         shell: bash
