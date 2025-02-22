@@ -37,4 +37,5 @@ jobs:
               break
             fi
           done
+          echo $found
           echo "found=$found" >> $GITHUB_OUTPUT
