@@ -8,7 +8,7 @@ name: release
 #    tags:
 #      - v*
 
-on: push
+on: workflow_dispatch
 
 jobs:
   build:
