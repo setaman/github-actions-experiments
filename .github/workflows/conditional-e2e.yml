@@ -21,11 +21,11 @@ jobs:
   e2e_tests:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run e2e') }}
+    if: "!contains(github.event.pull_request.head.commit.message, '[skip e2e]')"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Use output from build job
-        run: echo "Build output - ${{ needs.build.outputs.build_output }}"
+        run: echo "Build output- ${{ needs.build.outputs.build_output }}"
       - name: Run E2E tests
         run: echo "Running end-to-end tests..."
