@@ -1,9 +1,7 @@
 name: CI
-
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,25 +14,38 @@ jobs:
         run: echo "Building the project..."
       - name: Set output for next job
         id: build_step
-        run: echo "::set-output name=build_output::Build completed"
-      - name: Debug - Show last commit
-        run: |
-          echo "Last commit message:"
-          git log -1 --pretty=%B
-          echo "Last commit SHA:"
-          git log -1 --pretty=%H
-          echo "PR HEAD SHA: ${{ github.event.pull_request.head.sha }}"
-          echo "PR ms: ${{ github.event.pull_request.commits.*.message }}"
-          echo "JOIN: ${{ join(github.event.pull_request.commits.*.message, ' ') }}"
+        run: echo "build_output=Build completed" >> $GITHUB_OUTPUT
 
   e2e_tests:
     needs: build
     runs-on: ubuntu-latest
-    if: "!contains(github.event.pull_request.title, '[skip e2e]') && !contains(join(github.event.pull_request.commits.*.message, ' '), '[skip e2e]')"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Debug - Show last non-merge commit
+        run: |
+          echo "Last non-merge commit in PR:"
+          git log -1 --no-merges ${{ github.event.pull_request.head.sha }} --pretty=format:"SHA: %H%nMessage: %s%n"
+      
+      - name: Check for skip pattern
+        id: skip_check
+        run: |
+          LAST_COMMIT_MSG=$(git log -1 --no-merges ${{ github.event.pull_request.head.sha }} --pretty=format:"%s")
+          echo "Last commit message: $LAST_COMMIT_MSG"
+          if [[ "$LAST_COMMIT_MSG" =~ .*\[skip[[:space:]]+e2e\].* ]]; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+            echo "Found [skip e2e] in last commit"
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+            echo "Did not find [skip e2e] in last commit"
+          fi
+
       - name: Use output from build job
+        if: steps.skip_check.outputs.skip != 'true'
         run: echo "Build output- ${{ needs.build.outputs.build_output }}"
+        
       - name: Run E2E tests
+        if: steps.skip_check.outputs.skip != 'true'
         run: echo "Running end-to-end tests..."
