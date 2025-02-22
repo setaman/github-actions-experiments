@@ -30,7 +30,7 @@ jobs:
         shell: bash
         run: |
           found=false
-          IFS=',' read -ra KEYWORDS <<< "[skip e2e] [skip]"
+          IFS=',' read -ra KEYWORDS <<< "[skip e2e],[skip]"
           for keyword in "${KEYWORDS[@]}"; do
             if echo "$message" | grep -iq "$keyword"; then
               found=true
