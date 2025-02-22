@@ -21,7 +21,7 @@ jobs:
   e2e_tests:
     needs: build
     runs-on: ubuntu-latest
-    if: "!contains(github.event.pull_request.head.commit.message, '[skip e2e]')"
+    if: "!contains(github.event.head_commit.message, '[skip e2e]')"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
