@@ -1,0 +1,35 @@
+name: "Check Commit Message for Keywords"
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get last commit message
+        id: get_commit_message
+        shell: bash
+        run: |
+          if [ "$GITHUB_EVENT_NAME" == "pull_request" ]; then
+            COMMIT_MESSAGE=$(git log --format=%B -n 1 ${{ github.event.pull_request.merge_commit_sha }})
+          else
+            COMMIT_MESSAGE=$(git log --format=%B -n 1)
+          fi
+          echo "message<<EOF" >> $GITHUB_ENV
+          echo "$COMMIT_MESSAGE" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+      
+      - name: Check if commit message contains any keyword
+        id: check_commit
+        shell: bash
+        run: |
+          found=false
+          IFS=',' read -ra KEYWORDS <<< "[skip e2e] [skip]"
+          for keyword in "${KEYWORDS[@]}"; do
+            if echo "$message" | grep -iq "$keyword"; then
+              found=true
+              break
+            fi
+          done
+          echo "found=$found" >> $GITHUB_OUTPUT
