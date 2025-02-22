@@ -26,6 +26,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Use output from build job
-        run: echo "Build output: ${{ needs.build.outputs.build_output }}"
+        run: echo "Build output - ${{ needs.build.outputs.build_output }}"
       - name: Run E2E tests
         run: echo "Running end-to-end tests..."
