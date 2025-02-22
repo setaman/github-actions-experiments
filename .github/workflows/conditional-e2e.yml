@@ -25,6 +25,7 @@ jobs:
           git log -1 --pretty=%H
           echo "PR HEAD SHA: ${{ github.event.pull_request.head.sha }}"
           echo "PR ms: ${{ github.event.pull_request.commits.*.message }}"
+          echo "JOIN: ${{ join(github.event.pull_request.commits.*.message, ' ') }}"
 
   e2e_tests:
     needs: build
