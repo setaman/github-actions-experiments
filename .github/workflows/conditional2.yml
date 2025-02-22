@@ -7,6 +7,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       - name: Get last commit message
         id: get_commit_message
         shell: bash
