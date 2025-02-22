@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
+        if:  $GITHUB_EVENT_NAME == "pull_request"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Ensures all PR-related commits are fetched
@@ -29,14 +30,15 @@ jobs:
         id: check_commit
         shell: bash
         run: |
-          found=false
+          match=false
           IFS=',' read -ra KEYWORDS <<< "[skip e2e],[skip]"
           for keyword in "${KEYWORDS[@]}"; do
             echo "Checking $keyword against $message"
-            if echo "$message" | grep -iq "$keyword"; then
-              found=true
-              break
+            if [[ $message =~ "$keyword" ]]; then
+               match=true
+               echo "Match!"
+               break
             fi
           done
-          echo $found
-          echo "found=$found" >> $GITHUB_OUTPUT
+          echo $match
+          echo "match=$match" >> $GITHUB_OUTPUT
