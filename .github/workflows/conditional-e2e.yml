@@ -21,7 +21,7 @@ jobs:
   e2e_tests:
     needs: build
     runs-on: ubuntu-latest
-    if: contains(github.event.pull_request.labels.*.name, 'run e2e')
+    if: ${{ github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run e2e') }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
