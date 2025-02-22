@@ -2,22 +2,30 @@ name: CI
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      build_output: ${{ steps.build_step.outputs.build_output }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Run build
         run: echo "Building the project..."
+      - name: Set output for next job
+        id: build_step
+        run: echo "::set-output name=build_output::Build completed"
 
   e2e_tests:
+    needs: build
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.labels.*.name, 'run e2e')
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Use output from build job
+        run: echo "Build output: ${{ needs.build.outputs.build_output }}"
       - name: Run E2E tests
         run: echo "Running end-to-end tests..."
