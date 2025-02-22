@@ -32,6 +32,7 @@ jobs:
           found=false
           IFS=',' read -ra KEYWORDS <<< "[skip e2e],[skip]"
           for keyword in "${KEYWORDS[@]}"; do
+            echo "Checking $keyword against $message"
             if echo "$message" | grep -iq "$keyword"; then
               found=true
               break
