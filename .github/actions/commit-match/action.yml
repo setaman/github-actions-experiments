@@ -44,9 +44,9 @@ runs:
       run: |
         match=false
         matchedCommit=""
-        IFS=',' read -ra KEYWORDS <<< ${{ inputs.patterns }}
+        IFS=',' read -ra KEYWORDS <<< "${{ inputs.patterns }}"
         for keyword in "${KEYWORDS[@]}"; do
-          echo "Checking $keyword against $message"
+          echo "Checking '$keyword' against '$message'"
           if [[ $message =~ "$keyword" ]]; then
              match=true
              matchedCommit=$message
