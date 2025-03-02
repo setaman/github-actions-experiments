@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "Test 1"
-        uses: ./.github/actions/commit-match.yml
+        uses: ./.github/actions/commit-match
         with:
           patterns: "[skip test]"
 
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: "Test 1"
-        uses: ./.github/actions/commit-match.yml
+        uses: ./.github/actions/commit-match
         with:
           patterns: "should not match"
 
