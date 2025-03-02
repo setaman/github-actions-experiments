@@ -8,6 +8,7 @@ jobs:
   check1:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: "Test 1"
         uses: ./.github/actions/commit-match.yml
         with:
@@ -16,6 +17,7 @@ jobs:
   check2:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: "Test 1"
         uses: ./.github/actions/commit-match.yml
         with:
