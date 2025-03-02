@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Test 1"
-        uses: ../actions/commit-match
+        uses: ./.github/actions/commit-match.yml
         with:
           patterns: "[skip test]"
 
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Test 1"
-        uses: ../actions/commit-match
+        uses: ./.github/actions/commit-match.yml
         with:
           patterns: "should not match"
 
