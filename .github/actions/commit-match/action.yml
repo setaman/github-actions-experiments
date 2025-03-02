@@ -4,15 +4,14 @@ inputs:
   patterns:
     description: "list of patterns to check for"
     example: "[skip e2e],[skip]"
+    type: string
     required: true
 outputs:
   match:
     description: "true if any pattern is found in commit message"
-    type: boolean
     value: ${{ steps.check_commit.outputs.match }}
   matchedCommit:
     description: "commit message that matched the pattern"
-    type: string
     value: ${{ steps.check_commit.outputs.message }}
 runs:
   using: "composite"
