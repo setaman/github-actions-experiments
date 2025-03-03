@@ -7,6 +7,7 @@ on:
         required: true
     outputs:
       skip:
+        description: "Whether to skip the job"
         value: ${{ jobs.should-skip.outputs.skip }}
   push:
     branches: [main]
