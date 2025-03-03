@@ -32,6 +32,6 @@ jobs:
       - name: "Should not match"
         run: |
           echo "Skip: ${{ needs.no-match.outputs.skip }}"
-          if [ "${{ needs.no-match.outputs.skip }}" != "true" ]; then
+          if [ "${{ needs.no-match.outputs.skip }}" = "true" ]; then
             exit 1
           fi
