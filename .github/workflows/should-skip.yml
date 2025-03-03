@@ -7,13 +7,16 @@ on:
         required: true
     outputs:
       skip:
-        value: ${{ steps.skip.outputs.skip }}
+        value: ${{ jobs.should-skip.outputs.skip }}
   push:
     branches: [main]
 
 jobs:
   should-skip:
     runs-on: ubuntu-latest
+    outputs:
+      skip:
+        value: ${{ steps.skip.outputs.skip }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/commit-match
