@@ -7,7 +7,7 @@ on:
         required: true
     outputs:
       skip:
-        value: ${{ steps.commit-match.outputs.match }}
+        value: ${{ steps.skip.outputs.skip }}
   push:
     branches: [main]
 
@@ -17,6 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/commit-match
+        id: commit-match
         with:
           patterns: ${{ inputs.patterns }}
+      - id: skip
         run: echo "skip=${{ steps.commit-match.outputs.match }}" >> $GITHUB_OUTPUT
