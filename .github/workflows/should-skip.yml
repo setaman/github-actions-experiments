@@ -1,0 +1,22 @@
+name: "commit match test"
+on:
+  workflow_call:
+    inputs:
+      patterns:
+        type: string
+        required: true
+    outputs:
+      skip:
+        value: ${{ steps.commit-match.outputs.match }}
+  push:
+    branches: [main]
+
+jobs:
+  should-skip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/commit-match
+        with:
+          patterns: ${{ inputs.patterns }}
+        run: echo "skip=${{ steps.commit-match.outputs.match }}" >> $GITHUB_OUTPUT
