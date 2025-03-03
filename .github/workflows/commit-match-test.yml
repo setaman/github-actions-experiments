@@ -2,7 +2,7 @@ name: "commit match test"
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   match:
@@ -22,6 +22,9 @@ jobs:
       - name: "Should match"
         run: |
           echo "Skip: ${{ needs.match.outputs.skip }}"
+          if [ "${{ needs.match.outputs.skip }}" != "true" ]; then
+            exit 1
+          fi
   verify2:
     runs-on: ubuntu-latest
     needs: no-match
@@ -29,3 +32,6 @@ jobs:
       - name: "Should not match"
         run: |
           echo "Skip: ${{ needs.no-match.outputs.skip }}"
+          if [ "${{ needs.no-match.outputs.skip }}" = "true" ]; then
+            exit 1
+          fi
