@@ -16,8 +16,7 @@ jobs:
   should-skip:
     runs-on: ubuntu-latest
     outputs:
-      skip:
-        value: ${{ steps.skip.outputs.skip }}
+      skip: ${{ steps.skip.outputs.skip }}
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/commit-match
