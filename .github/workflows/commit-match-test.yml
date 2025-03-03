@@ -28,4 +28,4 @@ jobs:
     steps:
       - name: "Should not match"
         run: |
-          echo "Skip: ${{ needs.no-match.outputs.match }}"
+          echo "Skip: ${{ needs.no-match.outputs.skip }}"
